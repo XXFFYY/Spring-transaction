@@ -29,7 +29,7 @@ public class BookServiceImpl implements BookService {
             //noRollbackFor = ArithmeticException.class
             //noRollbackForClassName = "java.lang.ArithmeticException"
             //isolation = Isolation.DEFAULT
-            propagation = Propagation.REQUIRES_NEW
+            //propagation = Propagation.REQUIRES_NEW
     )
     public void buyBook(Integer userId, Integer bookId) {
         /*try {

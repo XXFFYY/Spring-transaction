@@ -486,3 +486,34 @@ public void checkout(Integer userId, Integer[] bookIds) {
 ​	 @Transactional(propagation = Propagation.REQUIRED)，默认情况，表示如果当前线程上有已经开 启的事务可用，那么就在这个事务中运行。经过观察，购买图书的方法buyBook()在checkout()中被调 用，checkout()上有事务注解，因此在此事务中执行。所购买的两本图书的价格为80和50，而用户的余 额为100，因此在购买第二本图书时余额不足失败，导致整个checkout()回滚，即只要有一本书买不 了，就都买不了
 
 ​	 @Transactional(propagation = Propagation.REQUIRES_NEW)，表示不管当前线程上是否有已经开启 的事务，都要开启新事务。同样的场景，每次购买图书都是在buyBook()的事务中执行，因此第一本图 书购买成功，事务结束，第二本图书购买失败，只在第二次的buyBook()中回滚，购买第一本图书不受 影响，即能买几本就买几本
+
+---
+
+## 3.基于XML的声明式事务
+
+### 3.1修改Spring配置文件
+
+```xml
+<!--配置事务通知-->
+<tx:advice id="tx" transaction-manager="transactionManager">
+    <tx:attributes>
+        <tx:method name="buyBook"/>
+    </tx:attributes>
+</tx:advice>
+
+<aop:config>
+    <aop:advisor advice-ref="tx" pointcut="execution(* com.Xie.service.impl.*.*(..))"/>
+</aop:config>
+```
+
+**注意：基于xml实现的声明式事务，必须引入aspectJ的依赖**
+
+```xml
+<!-- https://mvnrepository.com/artifact/org.springframework/spring-aspects -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-aspects</artifactId>
+    <version>5.3.22</version>
+</dependency>
+```
+

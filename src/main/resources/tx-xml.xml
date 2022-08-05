@@ -28,14 +28,17 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-   <!--
-        开启事务的注解驱动
-        将使用@Transactional注解的方法或类中的所有方法被spring事务管理
-        transaction-manager属性设置事务管理器的id
-        若事务管理器的id默认为transactionManager，则可以不设置该属性
-   -->
 
-    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!--配置事务通知-->
+    <tx:advice id="tx" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="buyBook"/>
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
 
+    <aop:config>
+        <aop:advisor advice-ref="tx" pointcut="execution(* com.Xie.service.impl.*.*(..))"/>
+    </aop:config>
 
 </beans>
